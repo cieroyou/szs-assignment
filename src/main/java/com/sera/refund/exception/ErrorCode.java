@@ -12,6 +12,8 @@ public enum ErrorCode {
     COMMON_ENTITY_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 엔티티입니다."),
     COMMON_ILLEGAL_STATUS(HttpStatus.BAD_REQUEST, "잘못된 상태값입니다."),
 
+    ENCRYPT_EXCEPTION(HttpStatus.INTERNAL_SERVER_ERROR, "암호화/복호화 중 오류가 발생했습니다."),
+
     USER_NOT_FOUND(HttpStatus.UNAUTHORIZED, "존재하지 않는 사용자입니다."),
     INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "비밀번호가 일치하지 않습니다."),
     USER_ALREADY_EXISTS(HttpStatus.BAD_REQUEST, "이미 존재하는 아이디입니다."),
@@ -21,6 +23,7 @@ public enum ErrorCode {
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "유효하지 않은 토큰입니다."),
     TOKEN_NOT_FOUND(HttpStatus.UNAUTHORIZED, "토큰이 존재하지 않습니다."),
     TOKEN_EXPIRED(HttpStatus.UNAUTHORIZED, "만료된 토큰입니다."),
+
     ;
 
 
