@@ -23,8 +23,18 @@ public class TaxCalculator {
         return BigDecimal.ZERO;
     }
 
+    // 다른 서비스에서도 사용할 가능성이 있다면 TaxUtil로 분리하는게 좋을거 같음
+
+    /**
+     * // 산출세액 = 누진공제 + (과세표준 - 기준) * 세율
+     *
+     * @param taxableIncome        과세표준
+     * @param lowerBound           기준
+     * @param taxRate              세율
+     * @param progressiveDeduction 누진공제
+     * @return 산출세액
+     */
     public static BigDecimal calculateTax(BigDecimal taxableIncome, BigDecimal lowerBound, BigDecimal taxRate, BigDecimal progressiveDeduction) {
-        // 산출세액 = 누진공제 + (과세표준 - 기준) * 세율
         return taxableIncome.subtract(lowerBound) // 기준값 차감
                 .multiply(taxRate) //  세율 적용
                 .add(progressiveDeduction) // 누진공제 추가

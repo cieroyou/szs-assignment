@@ -12,8 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.NumberFormat;
-import java.util.Locale;
+
+import static com.sera.refund.common.NumberFormatUtil.formatThousandSeparator;
 
 @Service
 @RequiredArgsConstructor
@@ -49,10 +49,5 @@ public class RefundService {
                 .orElseThrow(() -> new BaseException(ErrorCode.COMMON_ENTITY_NOT_FOUND, "Income record for User ID " + userId + " not found"));
     }
 
-    private String formatThousandSeparator(BigDecimal amount) {
-        // todo: numberformatUtil로 분리, - 1000.000 -> - 1,000
-        NumberFormat formatter = NumberFormat.getInstance(Locale.KOREA);
-        return formatter.format(amount);
-    }
 
 }
