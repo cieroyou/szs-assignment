@@ -4,6 +4,8 @@ import com.sera.refund.common.AllowedUsers;
 import com.sera.refund.controller.UserSignupRequest;
 import com.sera.refund.domain.User;
 import com.sera.refund.domain.UserRepository;
+import com.sera.refund.exception.BaseException;
+import com.sera.refund.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,12 +18,14 @@ public class SignupService {
     private final BCryptPasswordEncoder passwordEncoder;
 
     public void registerUser(UserSignupRequest request) {
-        // todo: 이미 존재하는지 체크
+        // 중복 아이디 체크
+        if (userRepository.findByUserId(request.getUserId()).isPresent()) {
+            throw new BaseException(ErrorCode.USER_ALREADY_EXISTS);
+        }
 
         // 허용된 사용자만 가입하도록 함
         if (!AllowedUsers.isAllowedUser(request.getName(), request.getRegNo())) {
-            // TODO: 예외를 Class 로 정의하여 유지보수성 높일 것
-            throw new IllegalArgumentException("허용되지 않은 사용자입니다.");
+            throw new BaseException(ErrorCode.NOT_ALLOWED_USER);
         }
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
