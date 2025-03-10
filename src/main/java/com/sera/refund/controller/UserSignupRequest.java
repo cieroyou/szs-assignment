@@ -2,11 +2,13 @@ package com.sera.refund.controller;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserSignupRequest {
 
     @NotBlank(message = "아이디는 필수 입력 항목입니다.")
