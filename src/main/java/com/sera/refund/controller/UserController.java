@@ -1,9 +1,9 @@
 package com.sera.refund.controller;
 
 
+import com.sera.refund.service.SignupService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class UserController {
 
-//    private final UserService userService;
+    private final SignupService signupService;
 
     @PostMapping("/signup")
-    public ResponseEntity<String> signup(@Valid @RequestBody UserSignupRequest request) {
-//        userService.registerUser(user.getUserId(), user.getPassword(), user.getName(), user.getRegNo());
-        return ResponseEntity.ok("회원가입 성공");
+    public String signup(@Valid @RequestBody UserSignupRequest request) {
+        signupService.registerUser(request);
+        return "회원가입 성공";
     }
 }

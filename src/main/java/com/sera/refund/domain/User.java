@@ -25,4 +25,16 @@ public class User {
 
     @Column(unique = true, nullable = false)
     private String regNo; // 주민등록번호 (암호화 필요)
+
+
+    private User(String userId, String password, String name, String regNo) {
+        this.userId = userId;
+        this.password = password;
+        this.name = name;
+        this.regNo = regNo;
+    }
+
+    public static User of(String userId, String password, String name, String regNo) {
+        return new User(userId, password, name, regNo);
+    }
 }
