@@ -4,11 +4,13 @@ package com.sera.refund.common.response;
 import com.sera.refund.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
+@Getter
 public class CommonResponse<T> {
 
     T data;

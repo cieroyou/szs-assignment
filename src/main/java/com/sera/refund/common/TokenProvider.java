@@ -1,5 +1,8 @@
 package com.sera.refund.common;
 
+import com.sera.refund.exception.BaseException;
+import com.sera.refund.exception.ErrorCode;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
@@ -23,4 +26,28 @@ public class TokenProvider {
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
                 .compact();
     }
+
+
+    public boolean validateToken(String token) {
+        try {
+            parseClaims(token);
+            return true;
+        } catch (Exception e) {
+            throw new BaseException(ErrorCode.INVALID_TOKEN);
+        }
+    }
+
+    private Claims parseClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8)))
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
+
+    // JWT에서 userId 추출
+    public String extractUserId(String token) {
+        return parseClaims(token).getSubject();
+    }
+
 }
