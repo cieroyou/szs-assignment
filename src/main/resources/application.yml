@@ -31,3 +31,38 @@ logging:
   level:
     org.hibernate.SQL: debug
     org.springframework: info
+
+tax:
+  brackets:
+    - lowerBound: 0
+      upperBound: 14000000
+      taxRate: 0.06
+      progressiveDeduction: 0
+    - lowerBound: 14000001
+      upperBound: 50000000
+      taxRate: 0.15
+      progressiveDeduction: 840000
+    - lowerBound: 50000001
+      upperBound: 88000000
+      taxRate: 0.24
+      progressiveDeduction: 6240000
+    - lowerBound: 88000001
+      upperBound: 150000000
+      taxRate: 0.35
+      progressiveDeduction: 15360000
+    - lowerBound: 150000001
+      upperBound: 300000000
+      taxRate: 0.38
+      progressiveDeduction: 19400000
+    - lowerBound: 300000001
+      upperBound: 500000000
+      taxRate: 0.40
+      progressiveDeduction: 25400000
+    - lowerBound: 500000001
+      upperBound: 1000000000
+      taxRate: 0.42
+      progressiveDeduction: 37406000
+    - lowerBound: 1000000001
+      upperBound: 999999999999
+      taxRate: 0.45
+      progressiveDeduction: 38406000
