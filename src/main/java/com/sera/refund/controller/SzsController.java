@@ -2,16 +2,14 @@ package com.sera.refund.controller;
 
 
 import com.sera.refund.service.LoginService;
+import com.sera.refund.service.RefundService;
 import com.sera.refund.service.ScrapingService;
 import com.sera.refund.service.SignupService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -23,6 +21,7 @@ public class SzsController {
     private final SignupService signupService;
     private final LoginService loginService;
     private final ScrapingService scrapingService;
+    private final RefundService refundService;
 
     @PostMapping("/signup")
     public String signup(@Valid @RequestBody UserSignupRequest request) {
@@ -42,4 +41,8 @@ public class SzsController {
         scrapingService.scrapData(userId);
     }
 
+    @GetMapping("/refund")
+    public String refund(@AuthenticationPrincipal String userId) {
+        return refundService.calculateRefund(userId);
+    }
 }
