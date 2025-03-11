@@ -1,6 +1,7 @@
 package com.sera.refund.domain;
 
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -9,7 +10,9 @@ import java.math.BigDecimal;
 @Getter
 @NoArgsConstructor
 @Entity
-@Table(name = "user_income")
+@Table(name = "user_income", uniqueConstraints = {
+        @UniqueConstraint(name = "user_year_unique", columnNames = {"user_id", "tax_year"})
+})
 public class UserIncome {
 
     @Id
@@ -18,8 +21,11 @@ public class UserIncome {
 
     private String userId;
 
+    @Column(nullable = false, name = "tax_year")
+    private int taxYear; // 연도
+
     @Column(nullable = false, name = "total_income")
-    private int totalIncome; // 종합소득금액
+    private BigDecimal totalIncome; // 종합소득금액
 
     @Column(nullable = false, name = "pension_deduction")
     private BigDecimal pensionDeduction; // 국민연금 공제 (1년 합산)
@@ -30,17 +36,20 @@ public class UserIncome {
     @Column(nullable = false, name = "tax_deduction")
     private BigDecimal taxDeduction; // 세액공제
 
-    public UserIncome(String userId, int totalIncome, BigDecimal pensionDeduction, BigDecimal creditCardDeduction, BigDecimal taxDeduction) {
+    @Builder
+    public UserIncome(String userId, int year, BigDecimal totalIncome, BigDecimal pensionDeduction, BigDecimal creditCardDeduction, BigDecimal taxDeduction) {
         this.userId = userId;
+        this.taxYear = year;
         this.totalIncome = totalIncome;
         this.pensionDeduction = pensionDeduction;
         this.creditCardDeduction = creditCardDeduction;
         this.taxDeduction = taxDeduction;
     }
 
+
     // 과세표준 계산 (종합소득금액 - 공제액)
     public BigDecimal getTaxableIncome() {
-        return BigDecimal.valueOf(totalIncome)
+        return totalIncome
                 .subtract(pensionDeduction)
                 .subtract(creditCardDeduction);
     }

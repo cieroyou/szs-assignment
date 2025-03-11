@@ -1,14 +1,17 @@
 package com.sera.refund.infrastructure;
 
+import com.sera.refund.infrastructure.dto.ScrapingData;
 import com.sera.refund.infrastructure.dto.ScrapingRequest;
 import com.sera.refund.infrastructure.dto.ScrapingResponse;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class ScrapingHttpApiCaller implements ScrapingApiCaller {
@@ -18,7 +21,7 @@ public class ScrapingHttpApiCaller implements ScrapingApiCaller {
     private final String X_API_KEY_VALUE = "eUdJijcuJgmN/xtBKyK2bg==";
 
     @Override
-    public ScrapingResponse callScrapingApi(ScrapingRequest request) {
+    public ScrapingData callScrapingApi(ScrapingRequest request) {
         // todo: 요청 에러처리 (empty secret, 등등)
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -33,7 +36,8 @@ public class ScrapingHttpApiCaller implements ScrapingApiCaller {
         } catch (Exception e) {
             throw new RuntimeException("스크래핑 API 호출 실패");
         }
-        return response;
+        log.info("response: {}", response.toString());
+        assert response != null;
+        return response.getData();
     }
-    // 스크래핑 API 호출
 }
