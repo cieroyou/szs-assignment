@@ -2,6 +2,7 @@ package com.sera.refund.service;
 
 import com.sera.refund.controller.dto.UserRefundResponse;
 import com.sera.refund.domain.UserIncome;
+import com.sera.refund.infrastructure.UserIncomeReader;
 import com.sera.refund.infrastructure.UserIncomeRepository;
 import com.sera.refund.infrastructure.UserRepository;
 import com.sera.refund.exception.BaseException;
@@ -24,7 +25,7 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 class RefundServiceTest {
     @Mock
-    private UserIncomeRepository userIncomeRepository;
+    private UserIncomeReader userIncomeReader;
     @Mock
     private UserRepository userRepository;
 
@@ -52,7 +53,7 @@ class RefundServiceTest {
         // Given: 정상 사용자지만 연말정산 데이터 없음
         String userId = "testUser";
         given(userRepository.existsByUserId(userId)).willReturn(true);
-        given(userIncomeRepository.findByUserId(userId)).willReturn(Collections.emptyList());
+        given(userIncomeReader.readUserIncome(userId)).willReturn(Collections.emptyList());
 
         // When
         List<UserRefundResponse> response = refundService.calculateRefund(userId);
@@ -73,7 +74,7 @@ class RefundServiceTest {
                 BigDecimal.ZERO,  // 신용카드 공제 없음
                 BigDecimal.ZERO); // 세액공제 없음
         given(userRepository.existsByUserId(userId)).willReturn(true);
-        given(userIncomeRepository.findByUserId(userId)).willReturn(List.of(income));
+        given(userIncomeReader.readUserIncome(userId)).willReturn(List.of(income));
         given(taxCalculator.calculateTax(any())).willReturn(new BigDecimal("840000")); // ✅ 1,400만 원 * 6%
 
         // When
@@ -97,7 +98,7 @@ class RefundServiceTest {
                 new BigDecimal("0"),  // 신용카드 공제
                 new BigDecimal("840000"));  // 세액공제
         given(userRepository.existsByUserId(userId)).willReturn(true);
-        given(userIncomeRepository.findByUserId(userId)).willReturn(List.of(income));
+        given(userIncomeReader.readUserIncome(userId)).willReturn(List.of(income));
         given(taxCalculator.calculateTax(any())).willReturn(new BigDecimal("840000")); // ✅ 1,400만 원 * 6%
 
         // When
@@ -119,7 +120,7 @@ class RefundServiceTest {
                 BigDecimal.ZERO,  // 신용카드 공제 없음
                 new BigDecimal("1000000")); // 세액공제
         given(userRepository.existsByUserId(userId)).willReturn(true);
-        given(userIncomeRepository.findByUserId(userId)).willReturn(List.of(income));
+        given(userIncomeReader.readUserIncome(userId)).willReturn(List.of(income));
         given(taxCalculator.calculateTax(any())).willReturn(new BigDecimal("840000")); // ✅ 1,400만 원 * 6%
 
         // When

@@ -3,6 +3,7 @@ package com.sera.refund.service;
 import com.sera.refund.common.AesEncryptor;
 import com.sera.refund.domain.User;
 import com.sera.refund.domain.UserIncome;
+import com.sera.refund.infrastructure.UserIncomeReader;
 import com.sera.refund.infrastructure.UserIncomeRepository;
 import com.sera.refund.infrastructure.UserRepository;
 import com.sera.refund.exception.BaseException;
@@ -32,6 +33,8 @@ class ScrapingServiceTest {
     @Mock
     UserIncomeRepository userIncomeRepository;
     @Mock
+    UserIncomeReader userIncomeReader;
+    @Mock
     ScrapingApiCaller scrapingApiCaller;
 
     @InjectMocks
@@ -56,6 +59,7 @@ class ScrapingServiceTest {
         BaseException exception = assertThrows(BaseException.class, () -> scrapingService.scrapData(userId));
         assertEquals(ErrorCode.COMMON_ENTITY_NOT_FOUND, exception.getErrorCode());
     }
+
 
     @Test
     @DisplayName("외부 API 호출 확인, 데이터 저장 실행 확인")

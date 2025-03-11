@@ -15,10 +15,6 @@ public class AllowedUsers {
             "조조", "810326-2715702"
     );
 
-    // 🔹 회원가입 가능한 이름 목록 가져오기
-    public static Set<String> getAllowedNames() {
-        return ALLOWED_USERS.keySet();
-    }
 
     // 🔹 이름과 주민등록번호가 일치하는지 확인
     public static boolean isAllowedUser(String name, String regNo) {
