@@ -14,16 +14,16 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, name = "user_id")
     private String userId;
 
     @Column(nullable = false)
-    private String password; // 🔒 암호화 필요
+    private String password; // 암호화 필요
 
     @Column(nullable = false)
     private String name;
 
-    @Column(unique = true, nullable = false)
+    @Column(unique = true, nullable = false, name = "reg_no")
     private String regNo; // 주민등록번호 (암호화 필요)
 
 
