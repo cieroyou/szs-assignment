@@ -1,10 +1,9 @@
 package com.sera.refund.service;
 
 import com.sera.refund.controller.dto.UserRefundResponse;
-import com.sera.refund.domain.TaxCalculator;
 import com.sera.refund.domain.UserIncome;
-import com.sera.refund.domain.UserIncomeRepository;
-import com.sera.refund.domain.UserRepository;
+import com.sera.refund.infrastructure.UserIncomeRepository;
+import com.sera.refund.infrastructure.UserRepository;
 import com.sera.refund.exception.BaseException;
 import com.sera.refund.exception.ErrorCode;
 import org.junit.jupiter.api.DisplayName;

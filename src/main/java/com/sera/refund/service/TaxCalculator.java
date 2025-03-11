@@ -1,4 +1,4 @@
-package com.sera.refund.domain;
+package com.sera.refund.service;
 
 import com.sera.refund.configuration.TaxRateConfig;
 import lombok.RequiredArgsConstructor;

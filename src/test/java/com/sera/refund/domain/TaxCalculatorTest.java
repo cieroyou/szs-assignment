@@ -1,6 +1,7 @@
 package com.sera.refund.domain;
 
 import com.sera.refund.configuration.TaxRateConfig;
+import com.sera.refund.service.TaxCalculator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,5 +1,6 @@
-package com.sera.refund.domain;
+package com.sera.refund.infrastructure;
 
+import com.sera.refund.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
