@@ -43,7 +43,8 @@ public class SzsController {
     @PostMapping("/scrap")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void scrap(@AuthenticationPrincipal String userId) {
-        scrapingService.scrapData(userId);
+//        scrapingService.scrapData(userId);
+        scrapingService.scrapDataAsync(userId);
     }
 
     @GetMapping("/refund")
