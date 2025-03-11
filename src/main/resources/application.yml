@@ -5,13 +5,15 @@ server:
       charset: UTF-8
       enabled: true
       force: true
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /3o3/swagger.html  # ✅ Swagger UI 경로 변경
+
 spring:
   messages:
     encoding: UTF-8
-  #  security:
-  #    user:
-  #      name: admin  # ?? ??? ???
-  #      password: admin  # ?? ??? ????
   datasource:
     url: jdbc:h2:mem:testdb
     driver-class-name: org.h2.Driver
@@ -30,8 +32,7 @@ spring:
 logging:
   level:
     org.hibernate.SQL: debug
-    org.springframework: info
-
+#    org.springframework: trace
 tax:
   brackets:
     - lowerBound: 0

@@ -28,17 +28,25 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
 
     // 인증이 필요없는 요청에 대해서는 필터를 거치지 않도록 설정
     private static final List<String> AUTH_WHITELIST = List.of(
-            "/h2-console",
-            "/h2-console/**",
-            "/szs/signup",
-            "/szs/login"
+            "/3o3/swagger.html",  // Swagger UI 진입점
+            "/3o3/swagger-ui/**", // Swagger 관련 리소스 허용
+            "/v3/api-docs",       // OpenAPI 문서 기본 경로
+            "/v3/api-docs/**",    // OpenAPI 세부 경로 허용
+            "/h2-console",        // H2 콘솔 접근
+            "/h2-console/**",     // H2 콘솔 접근
+            "/szs/signup",        // 회원가입
+            "/szs/login"          // 로그인
     );
 
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
         String uri = request.getRequestURI();
-        return AUTH_WHITELIST.stream().anyMatch(uri::startsWith);
+        return AUTH_WHITELIST.stream().anyMatch(pattern -> uri.matches(convertToRegex(pattern)));
+    }
+
+    private String convertToRegex(String pattern) {
+        return pattern.replace("**", ".*");
     }
 
     @Override
