@@ -1,5 +1,6 @@
 package com.sera.refund.service;
 
+import com.sera.refund.controller.UserRefundResponse;
 import com.sera.refund.domain.TaxCalculator;
 import com.sera.refund.domain.UserIncome;
 import com.sera.refund.domain.UserIncomeRepository;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 import static com.sera.refund.common.NumberFormatUtil.formatThousandSeparator;
 
@@ -23,18 +25,23 @@ public class RefundService {
     private final TaxCalculator taxCalculator;
 
     @Transactional(readOnly = true)
-    public String calculateRefund(String userId) {
+    public List<UserRefundResponse> calculateRefund(String userId) {
         validateUser(userId);
-        UserIncome income = getUserIncomeByUserId(userId);
+        List<UserIncome> incomes = userIncomeRepository.findByUserId(userId);
 
-        // 1. 과세표준 계산 (종합소득금액 - 공제액), 소수점 공제액으로 인한 소수점 발생시 반올림 적용
-        BigDecimal taxableIncome = income.getTaxableIncome().setScale(0, RoundingMode.HALF_UP);
-        // 2. 산출세액 계산
-        BigDecimal calculatedTax = taxCalculator.calculateTax(taxableIncome);
-        // 3. 결정세액 계산 (산출세액 - 세액공제)
-        BigDecimal finalTax = calculatedTax.subtract(income.getTaxDeduction());
+        return incomes.stream().map(income -> {
+            // 1. 과세표준 계산 (종합소득금액 - 공제액), 소수점 공제액으로 인한 소수점 발생시 반올림 적용
+            BigDecimal taxableIncome = income.getTaxableIncome().setScale(0, RoundingMode.HALF_UP);
+            // 2. 산출세액 계산
+            BigDecimal calculatedTax = taxCalculator.calculateTax(taxableIncome);
+            // 3. 결정세액 계산 (산출세액 - 세액공제)
+            BigDecimal finalTax = calculatedTax.subtract(income.getTaxDeduction());
 
-        return formatThousandSeparator(finalTax);
+            // 천단위 구분 적용
+            String formattedFinalTax = formatThousandSeparator(finalTax);
+            return new UserRefundResponse(income.getTaxYear(), formattedFinalTax);
+
+        }).toList();
 
     }
 
@@ -42,11 +49,6 @@ public class RefundService {
         if (!userRepository.existsByUserId(userId)) {
             throw new BaseException(ErrorCode.COMMON_ENTITY_NOT_FOUND, "User with ID " + userId + " not found");
         }
-    }
-
-    private UserIncome getUserIncomeByUserId(String userId) {
-        return userIncomeRepository.findByUserId(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.COMMON_ENTITY_NOT_FOUND, "Income record for User ID " + userId + " not found"));
     }
 
 

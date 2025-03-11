@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -37,12 +38,11 @@ public class SzsController {
 
     @PostMapping("/scrap")
     public void scrap(@AuthenticationPrincipal String userId) {
-        // 스크래핑 서비스 호출
         scrapingService.scrapData(userId);
     }
 
     @GetMapping("/refund")
-    public String refund(@AuthenticationPrincipal String userId) {
+    public List<UserRefundResponse> refund(@AuthenticationPrincipal String userId) {
         return refundService.calculateRefund(userId);
     }
 }
