@@ -1,4 +1,4 @@
-package com.sera.refund.controller;
+package com.sera.refund.controller.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;

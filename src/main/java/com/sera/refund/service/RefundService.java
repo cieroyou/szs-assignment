@@ -1,6 +1,6 @@
 package com.sera.refund.service;
 
-import com.sera.refund.controller.UserRefundResponse;
+import com.sera.refund.controller.dto.UserRefundResponse;
 import com.sera.refund.domain.TaxCalculator;
 import com.sera.refund.domain.UserIncome;
 import com.sera.refund.domain.UserIncomeRepository;

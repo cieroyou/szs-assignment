@@ -1,7 +1,7 @@
 package com.sera.refund.service;
 
 import com.sera.refund.common.TokenProvider;
-import com.sera.refund.controller.UserLoginRequest;
+import com.sera.refund.controller.dto.UserLoginRequest;
 import com.sera.refund.domain.User;
 import com.sera.refund.domain.UserRepository;
 import com.sera.refund.exception.BaseException;

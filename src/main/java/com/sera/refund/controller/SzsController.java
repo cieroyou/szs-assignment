@@ -1,18 +1,22 @@
 package com.sera.refund.controller;
 
 
+import com.sera.refund.common.response.CommonResponse;
+import com.sera.refund.controller.dto.UserLoginRequest;
+import com.sera.refund.controller.dto.UserLoginResponse;
+import com.sera.refund.controller.dto.UserRefundResponse;
+import com.sera.refund.controller.dto.UserSignupRequest;
 import com.sera.refund.service.LoginService;
 import com.sera.refund.service.RefundService;
 import com.sera.refund.service.ScrapingService;
 import com.sera.refund.service.SignupService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/szs")
@@ -25,24 +29,25 @@ public class SzsController {
     private final RefundService refundService;
 
     @PostMapping("/signup")
-    public String signup(@Valid @RequestBody UserSignupRequest request) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void signup(@Valid @RequestBody UserSignupRequest request) {
         signupService.registerUser(request);
-        return "회원가입 성공";
     }
 
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@Valid @RequestBody UserLoginRequest request) {
+    public CommonResponse<UserLoginResponse> login(@Valid @RequestBody UserLoginRequest request) {
         String token = loginService.login(request);
-        return ResponseEntity.ok(Map.of("accessToken", token));
+        return CommonResponse.success(new UserLoginResponse(token));
     }
 
     @PostMapping("/scrap")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void scrap(@AuthenticationPrincipal String userId) {
         scrapingService.scrapData(userId);
     }
 
     @GetMapping("/refund")
-    public List<UserRefundResponse> refund(@AuthenticationPrincipal String userId) {
-        return refundService.calculateRefund(userId);
+    public CommonResponse<List<UserRefundResponse>> refund(@AuthenticationPrincipal String userId) {
+        return CommonResponse.success(refundService.calculateRefund(userId));
     }
 }

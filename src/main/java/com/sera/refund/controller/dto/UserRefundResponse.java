@@ -1,4 +1,4 @@
-package com.sera.refund.controller;
+package com.sera.refund.controller.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
