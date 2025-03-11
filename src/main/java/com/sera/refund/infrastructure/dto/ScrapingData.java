@@ -5,9 +5,7 @@ import com.sera.refund.common.NumberFormatUtil;
 import com.sera.refund.domain.UserIncome;
 import com.sera.refund.exception.BaseException;
 import com.sera.refund.exception.ErrorCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -18,6 +16,8 @@ import static com.sera.refund.common.NumberFormatUtil.safeBigDecimal;
 @Getter
 @Setter
 @ToString
+@AllArgsConstructor
+@NoArgsConstructor
 public class ScrapingData {
     @JsonProperty("종합소득금액")
     private int totalIncome;
@@ -77,6 +77,8 @@ public class ScrapingData {
     @Getter
     @Setter
     @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class IncomeDeduction {
         @JsonProperty("국민연금")
         private List<PensionDeduction> pensionDeductions;
@@ -92,6 +94,8 @@ public class ScrapingData {
     @Getter
     @Setter
     @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class PensionDeduction {
         @JsonProperty("월")
         private String month;
@@ -104,12 +108,14 @@ public class ScrapingData {
     @Getter
     @Setter
     @ToString
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class CreditCardDeduction {
         @JsonProperty("month")
         private List<Map<String, String>> monthlyDeductions;
 
         @JsonProperty("year")
-        private int year;
+        private Integer year;
     }
 }
 

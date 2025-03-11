@@ -24,7 +24,7 @@ public class ScrapingService {
     @Transactional(readOnly = true)
     public User getUser(String userId) {
         return userRepository.findByUserId(userId)
-                .orElseThrow(() -> new BaseException(ErrorCode.USER_NOT_FOUND));
+                .orElseThrow(() -> new BaseException(ErrorCode.COMMON_ENTITY_NOT_FOUND, "User with ID " + userId + " not found"));
     }
 
     public void scrapData(String userId) {

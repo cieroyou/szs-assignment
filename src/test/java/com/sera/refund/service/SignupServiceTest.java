@@ -41,7 +41,6 @@ class SignupServiceTest {
         UserSignupRequest request = new UserSignupRequest("kw1", "password", "관우", "681108-1582816");
         when(userRepository.findByUserId(request.getUserId())).thenReturn(Optional.empty());
         when(passwordEncoder.encode(request.getPassword())).thenReturn("encodedPassword");
-        when(passwordEncoder.encode(request.getRegNo())).thenReturn("encodedRegNo");
 
         // when
         signupService.registerUser(request);
