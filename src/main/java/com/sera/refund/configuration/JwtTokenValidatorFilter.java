@@ -28,6 +28,7 @@ public class JwtTokenValidatorFilter extends OncePerRequestFilter {
 
     // 인증이 필요없는 요청에 대해서는 필터를 거치지 않도록 설정
     private static final List<String> AUTH_WHITELIST = List.of(
+            "/h2-console",
             "/h2-console/**",
             "/szs/signup",
             "/szs/login"
