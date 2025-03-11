@@ -2,10 +2,10 @@ package com.sera.refund.service;
 
 import com.sera.refund.controller.dto.UserRefundResponse;
 import com.sera.refund.domain.UserIncome;
-import com.sera.refund.infrastructure.UserIncomeRepository;
-import com.sera.refund.infrastructure.UserRepository;
 import com.sera.refund.exception.BaseException;
 import com.sera.refund.exception.ErrorCode;
+import com.sera.refund.infrastructure.UserIncomeReader;
+import com.sera.refund.infrastructure.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,15 +19,14 @@ import static com.sera.refund.common.NumberFormatUtil.formatThousandSeparator;
 @Service
 @RequiredArgsConstructor
 public class RefundService {
-    private final UserIncomeRepository userIncomeRepository;
+    private final UserIncomeReader userIncomeReader;
     private final UserRepository userRepository;
     private final TaxCalculator taxCalculator;
 
     @Transactional(readOnly = true)
     public List<UserRefundResponse> calculateRefund(String userId) {
         validateUser(userId);
-        List<UserIncome> incomes = userIncomeRepository.findByUserId(userId);
-
+        List<UserIncome> incomes = userIncomeReader.readUserIncome(userId);
         return incomes.stream().map(income -> {
             // 1. 과세표준 계산 (종합소득금액 - 공제액), 소수점 공제액으로 인한 소수점 발생시 반올림 적용
             BigDecimal taxableIncome = income.getTaxableIncome().setScale(0, RoundingMode.HALF_UP);
@@ -42,7 +41,6 @@ public class RefundService {
             return new UserRefundResponse(income.getTaxYear(), formattedFinalTax);
 
         }).toList();
-
     }
 
     private void validateUser(String userId) {

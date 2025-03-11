@@ -43,7 +43,7 @@ public class SzsController {
     @PostMapping("/scrap")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void scrap(@AuthenticationPrincipal String userId) {
-//        scrapingService.scrapData(userId);
+//        scrapingService.scrapData(userId); 동기식
         scrapingService.scrapDataAsync(userId);
     }
 

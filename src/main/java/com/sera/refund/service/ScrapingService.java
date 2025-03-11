@@ -6,6 +6,7 @@ import com.sera.refund.domain.UserIncome;
 import com.sera.refund.exception.BaseException;
 import com.sera.refund.exception.ErrorCode;
 import com.sera.refund.infrastructure.ScrapingApiCaller;
+import com.sera.refund.infrastructure.UserIncomeReader;
 import com.sera.refund.infrastructure.UserIncomeRepository;
 import com.sera.refund.infrastructure.UserRepository;
 import com.sera.refund.infrastructure.dto.ScrapingData;
@@ -16,6 +17,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
@@ -24,6 +26,7 @@ import java.util.concurrent.CompletableFuture;
 public class ScrapingService {
     private final UserRepository userRepository;
     private final UserIncomeRepository userIncomeRepository;
+    private final UserIncomeReader userIncomeReader;
     private final ScrapingApiCaller scrapingApiCaller;
 
     @Transactional(readOnly = true)
@@ -33,8 +36,14 @@ public class ScrapingService {
     }
 
     public void scrapData(String userId) {
-        User user = getUser(userId);
+        List<UserIncome> cachedData = userIncomeReader.readUserIncome(userId);
+        // 1. 캐시 조회
+        if (!cachedData.isEmpty()) {
+            log.info("캐시에 데이터 존재, API 호출 생략 userId={}", userId);
+            return;
+        }
 
+        User user = getUser(userId);
         // 주민등록번호 복호화
         String decryptedRegNo = AesEncryptor.decrypt(user.getRegNo());
 
@@ -44,25 +53,14 @@ public class ScrapingService {
         // 3. 연말정산 데이터 저장
         UserIncome userIncome = responseData.toUserIncome(userId);
         userIncomeRepository.save(userIncome);
+        userIncomeRepository.findByUserId(userId); // ✅ 최신 데이터 조회 후 캐시에 저장
     }
 
     @Async
     public CompletableFuture<Void> scrapDataAsync(String userId) {
         return CompletableFuture.runAsync(() -> {
             try {
-                // ✅ 1. 유저 조회 (DB)
-                User user = getUser(userId);
-
-                // ✅ 2. 주민번호 복호화
-                String decryptedRegNo = AesEncryptor.decrypt(user.getRegNo());
-
-                // ✅ 3. 외부 API 호출 (최대 20초)
-                ScrapingData responseData = scrapingApiCaller.callScrapingApi(new ScrapingRequest(user.getName(), decryptedRegNo));
-
-                // ✅ 4. 연말정산 데이터 저장 (DB, 트랜잭션 적용)
-                UserIncome userIncome = responseData.toUserIncome(userId);
-                userIncomeRepository.save(userIncome);
-
+                scrapData(userId);
             } catch (Exception e) {
                 log.error("스크래핑 비동기 작업 실패: {}", e.getMessage());
             }
