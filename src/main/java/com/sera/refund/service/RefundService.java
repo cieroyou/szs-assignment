@@ -35,7 +35,8 @@ public class RefundService {
             // 2. 산출세액 계산
             BigDecimal calculatedTax = taxCalculator.calculateTax(taxableIncome);
             // 3. 결정세액 계산 (산출세액 - 세액공제)
-            BigDecimal finalTax = calculatedTax.subtract(income.getTaxDeduction());
+            BigDecimal finalTax = calculatedTax.subtract(income.getTaxDeduction())
+                    .setScale(0, RoundingMode.HALF_UP);
 
             // 천단위 구분 적용
             String formattedFinalTax = formatThousandSeparator(finalTax);
